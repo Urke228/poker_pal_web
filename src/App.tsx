@@ -6,6 +6,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { HomePage } from "./pages/HomePage";
 import { ClocksListPage } from "./pages/ClocksListPage";
 import { ClockPage } from "./clock/ClockPage";
+import { StatsPage } from "./pages/StatsPage";
 import "./theme.css";
 
 function App() {
@@ -36,6 +37,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ClockPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/stats"
+            element={
+              <ProtectedRoute>
+                <StatsPage />
               </ProtectedRoute>
             }
           />

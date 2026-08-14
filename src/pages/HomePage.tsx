@@ -27,9 +27,10 @@ const TILES: Tile[] = [
     sublabel: "Coming soon",
   },
   {
+    to: "/stats",
     icon: "📊",
     label: "Stats",
-    sublabel: "Coming soon",
+    sublabel: "Track your results over time",
   },
 ];
 

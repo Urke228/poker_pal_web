@@ -1,0 +1,232 @@
+.stats-main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.stats-main h1 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.stats-main h2 {
+  font-size: 15px;
+  color: var(--pp-text-muted);
+  margin: 32px 0 12px;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.overview-card {
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--pp-border);
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.overview-label {
+  font-size: 13px;
+  color: var(--pp-text-muted);
+  margin-bottom: 6px;
+}
+
+.overview-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.overview-value {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.overview-change {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.overview-change.up {
+  color: #2e7d32;
+}
+
+.overview-change.down {
+  color: #d32f2f;
+}
+
+.chart-wrap {
+  border: 1px solid var(--pp-border);
+  border-radius: 12px;
+  background: #fff;
+  padding: 16px 8px 8px;
+}
+
+.chart-empty {
+  padding: 48px 0;
+  text-align: center;
+  color: var(--pp-text-muted);
+  border: 1px dashed var(--pp-border);
+  border-radius: 12px;
+}
+
+.chart-tooltip {
+  background: #14201b;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.chart-tooltip-date {
+  color: #9ca3af;
+  margin-bottom: 2px;
+}
+
+.chart-tooltip-label {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.chart-tooltip-value {
+  font-weight: 700;
+}
+
+.stats-add-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.stats-add-btn {
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  background: var(--pp-primary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: #fff;
+  border: 1px solid var(--pp-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.stats-table th,
+.stats-table td {
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--pp-border);
+}
+
+.stats-table th {
+  color: var(--pp-text-muted);
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stats-table tr:last-child td {
+  border-bottom: none;
+}
+
+.stats-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.stats-table button.delete-btn {
+  border: none;
+  background: none;
+  color: var(--pp-danger);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.stats-empty {
+  color: var(--pp-text-muted);
+  font-size: 14px;
+  padding: 12px 0;
+}
+
+/* Add-entry modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+.modal-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  width: min(92vw, 420px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-card h3 {
+  margin: 0 0 4px;
+  font-size: 17px;
+}
+
+.modal-field label {
+  display: block;
+  font-size: 13px;
+  color: var(--pp-text-muted);
+  margin-bottom: 4px;
+}
+
+.modal-field input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--pp-border);
+  background: var(--pp-input-fill);
+  font-size: 14px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.modal-actions button {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-actions .cancel {
+  background: var(--pp-input-fill);
+}
+
+.modal-actions .save {
+  background: var(--pp-primary);
+  color: #fff;
+}
+
+.modal-error {
+  color: var(--pp-danger);
+  font-size: 13px;
+}
