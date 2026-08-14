@@ -1,0 +1,38 @@
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: var(--pp-appbar);
+}
+
+.top-bar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #0b1a15;
+  font-weight: 700;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.top-bar-brand img {
+  height: 32px;
+}
+
+.top-bar-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #0b1a15;
+}
+
+.top-bar-user button {
+  border: none;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 13px;
+}

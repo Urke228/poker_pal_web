@@ -1,0 +1,28 @@
+:root {
+  --pp-primary: #3176ff;
+  --pp-secondary: #6c3ce9;
+  --pp-appbar: #6ecbdb;
+  --pp-bg: #ffffff;
+  --pp-input-fill: #f8f9fa;
+  --pp-border: #e5e7eb;
+  --pp-success: #2e7d32;
+  --pp-danger: #d32f2f;
+  --pp-text-muted: #6b7280;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  background: var(--pp-bg);
+  color: #14201b;
+}
+
+button {
+  font-family: inherit;
+}

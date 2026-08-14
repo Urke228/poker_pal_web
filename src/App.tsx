@@ -1,28 +1,48 @@
-import { useEffect, useState } from "react";
-import { onAuthStateChanged, type User } from "firebase/auth";
-import { auth } from "./firebase";
-import "./App.css";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { AuthProvider } from "./auth/AuthContext";
+import { LoginPage } from "./auth/LoginPage";
+import { SignUpPage } from "./auth/SignUpPage";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { HomePage } from "./pages/HomePage";
+import { ClocksListPage } from "./pages/ClocksListPage";
+import { ClockPage } from "./clock/ClockPage";
+import "./theme.css";
 
 function App() {
-  const [user, setUser] = useState<User | null>(null);
-  const [ready, setReady] = useState(false);
-
-  useEffect(
-    () =>
-      onAuthStateChanged(auth, (u) => {
-        setUser(u);
-        setReady(true);
-      }),
-    [],
-  );
-
-  if (!ready) return null;
-
   return (
-    <main id="root-shell">
-      <h1>PokerPal</h1>
-      <p>{user ? `Signed in as ${user.email ?? user.uid}` : "Not signed in"}</p>
-    </main>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/clocks"
+            element={
+              <ProtectedRoute>
+                <ClocksListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/clock"
+            element={
+              <ProtectedRoute>
+                <ClockPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
