@@ -17,6 +17,10 @@ export function SignUpPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (auth.user) navigate("/", { replace: true });
+  }, [auth.user, navigate]);
+
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     if (!username.trim()) {
@@ -37,7 +41,6 @@ export function SignUpPage() {
     }
     setFieldError(null);
     await auth.signUp(username, email, password, false);
-    if (!auth.errorMessage) navigate("/");
   };
 
   return (

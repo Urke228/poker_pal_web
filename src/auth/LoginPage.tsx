@@ -1,14 +1,21 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import "./auth.css";
 
 export function LoginPage() {
   const auth = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   const [fieldError, setFieldError] = useState<string | null>(null);
+
+  // Leave the login page as soon as we're authenticated — covers email,
+  // Google, and landing here while already signed in.
+  useEffect(() => {
+    if (auth.user) navigate("/", { replace: true });
+  }, [auth.user, navigate]);
 
   useEffect(() => {
     auth.clearError();

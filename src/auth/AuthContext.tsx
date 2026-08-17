@@ -35,6 +35,8 @@ export type AuthErrorCode =
   | "weak-password"
   | "network"
   | "google-canceled"
+  | "popup-blocked"
+  | "unauthorized-domain"
   | "unknown";
 
 const ERROR_MESSAGES: Record<AuthErrorCode, string | null> = {
@@ -46,6 +48,8 @@ const ERROR_MESSAGES: Record<AuthErrorCode, string | null> = {
   "weak-password": "Password is too weak (min 6 characters).",
   network: "Network error, please try again.",
   "google-canceled": "Google sign-in was cancelled.",
+  "popup-blocked": "The browser blocked the sign-in pop-up. Allow pop-ups for this site and try again.",
+  "unauthorized-domain": "This domain is not authorized for sign-in in the Firebase project.",
   unknown: "An unknown error occurred.",
 };
 
@@ -67,6 +71,10 @@ function mapAuthErrorCode(code: string): AuthErrorCode {
     case "auth/popup-closed-by-user":
     case "auth/cancelled-popup-request":
       return "google-canceled";
+    case "auth/popup-blocked":
+      return "popup-blocked";
+    case "auth/unauthorized-domain":
+      return "unauthorized-domain";
     default:
       return "unknown";
   }
@@ -178,6 +186,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await createUserProfile(cred.user.uid, name, cred.user.email);
       if (cred.user.email) persistEmail(remember, cred.user.email);
     } catch (e) {
+      console.error("Google sign-in failed:", e);
       setErrorCode(mapAuthErrorCode((e as { code?: string }).code ?? ""));
     } finally {
       setIsLoading(false);
