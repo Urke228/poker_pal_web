@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { TopBar } from "../components/TopBar";
-import { useAuth } from "../auth/AuthContext";
-import { useTournamentEntries, addTournamentEntry, deleteTournamentEntry } from "../stats/useTournamentEntries";
-import { computeOverview, buildChartData } from "../stats/statsMath";
+import { useTournamentStats } from "../stats/useTournamentEntries";
+import { addStatsEntry, deleteStatsEntry } from "../api/stats";
+import { errorMessage } from "../api/client";
 import { OverviewCard } from "../stats/OverviewCard";
 import { ProfitChart } from "../stats/ProfitChart";
 import { EntriesTable } from "../stats/EntriesTable";
@@ -10,18 +10,31 @@ import { AddEntryModal } from "../stats/AddEntryModal";
 import "../stats/stats.css";
 
 export function StatsPage() {
-  const { user } = useAuth();
-  const { entries, ready } = useTournamentEntries();
+  const { stats, ready, error, reload } = useTournamentStats();
   const [showAdd, setShowAdd] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
 
-  const overview = computeOverview(entries);
-  const chartData = buildChartData(entries);
+  const { overview, entries, chart } = stats;
+
+  const remove = async (id: string) => {
+    setActionError(null);
+    try {
+      await deleteStatsEntry(id);
+      await reload();
+    } catch (e) {
+      setActionError(errorMessage(e));
+    }
+  };
 
   return (
     <div>
       <TopBar />
       <main className="stats-main">
         <h1>Performance Overview</h1>
+
+        {(error || actionError) && (
+          <p className="stats-error">{actionError ?? error}</p>
+        )}
 
         {!ready ? (
           <p className="stats-empty">Loading…</p>
@@ -35,16 +48,23 @@ export function StatsPage() {
               />
               <OverviewCard
                 label="Earnings"
-                value={`$${overview.earnings.toFixed(2)}`}
+                value={`$${overview.totalWin.toFixed(2)}`}
                 change={overview.earningsChange}
                 isCurrencyChange
               />
-              <OverviewCard label="ROI" value={`${overview.roi.toFixed(1)}%`} change={overview.roiChange} />
-              <OverviewCard label="Net Profit" value={`$${overview.netProfit.toFixed(2)}`} />
+              <OverviewCard
+                label="ROI"
+                value={`${overview.roi.toFixed(1)}%`}
+                change={overview.roiChange}
+              />
+              <OverviewCard
+                label="Net Profit"
+                value={`$${overview.profitLoss.toFixed(2)}`}
+              />
             </div>
 
             <h2>Profit Over Time</h2>
-            <ProfitChart data={chartData} />
+            <ProfitChart data={chart} />
 
             <h2>Tournament Entries</h2>
             <div className="stats-add-row">
@@ -53,18 +73,18 @@ export function StatsPage() {
               </button>
             </div>
             <div style={{ height: 12 }} />
-            <EntriesTable
-              entries={entries}
-              onDelete={(id) => user && deleteTournamentEntry(user.uid, id)}
-            />
+            <EntriesTable entries={entries} onDelete={(id) => void remove(id)} />
           </>
         )}
       </main>
 
-      {showAdd && user && (
+      {showAdd && (
         <AddEntryModal
           onClose={() => setShowAdd(false)}
-          onSave={(entry) => addTournamentEntry(user.uid, entry)}
+          onSave={async (entry) => {
+            await addStatsEntry(entry);
+            await reload();
+          }}
         />
       )}
     </div>

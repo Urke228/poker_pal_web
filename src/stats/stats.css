@@ -160,6 +160,15 @@
   padding: 12px 0;
 }
 
+.stats-error {
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border: 1px solid var(--pp-danger);
+  border-radius: 8px;
+  color: var(--pp-danger);
+  font-size: 14px;
+}
+
 /* Add-entry modal */
 .modal-backdrop {
   position: fixed;

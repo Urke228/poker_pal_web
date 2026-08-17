@@ -16,14 +16,9 @@ import {
   signOut as firebaseSignOut,
   type User,
 } from "firebase/auth";
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
-import { auth, db } from "../firebase";
+import { auth } from "../firebase";
+import { ensureProfile } from "../api/stats";
 
-// Same default asset paths the mobile app uses — they resolve from the
-// Flutter app's own bundled assets regardless of which client created the
-// account, so it's safe to write the same strings from the web app.
-const DEFAULT_AVATAR = "lib/assets/images/avatars/avatar1.png";
-const DEFAULT_BACKGROUND = "lib/assets/images/backgrounds/background1.png";
 const REMEMBERED_EMAIL_KEY = "pokerpal_email";
 
 export type AuthErrorCode =
@@ -101,22 +96,13 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-async function createUserProfile(uid: string, username: string, email: string | null) {
-  const ref = doc(db, "users", uid);
-  const snap = await getDoc(ref);
-  if (snap.exists()) return;
-  const name = username.trim();
-  await setDoc(ref, {
-    username: name,
-    username_lowercase: name.toLowerCase(),
-    email,
-    joinedAt: serverTimestamp(),
-    followers: [],
-    following: [],
-    photoURL: DEFAULT_AVATAR,
-    backgroundURL: DEFAULT_BACKGROUND,
-    tournaments: [],
-  });
+/**
+ * Delegates to the API, which owns the profile document shape so an account
+ * created on web is identical to one created on mobile. It is a no-op when
+ * the profile already exists.
+ */
+async function createUserProfile(username: string) {
+  await ensureProfile(username);
 }
 
 function persistEmail(remember: boolean, email: string) {
@@ -166,8 +152,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setErrorCode("none");
     setIsLoading(true);
     try {
-      const cred = await createUserWithEmailAndPassword(auth, email, password);
-      await createUserProfile(cred.user.uid, username, email);
+      await createUserWithEmailAndPassword(auth, email, password);
+      await createUserProfile(username);
       persistEmail(remember, email);
     } catch (e) {
       setErrorCode(mapAuthErrorCode((e as { code?: string }).code ?? ""));
@@ -183,7 +169,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const cred = await signInWithPopup(auth, new GoogleAuthProvider());
       const name =
         cred.user.displayName ?? cred.user.email?.split("@")[0] ?? "Player";
-      await createUserProfile(cred.user.uid, name, cred.user.email);
+      await createUserProfile(name);
       if (cred.user.email) persistEmail(remember, cred.user.email);
     } catch (e) {
       console.error("Google sign-in failed:", e);

@@ -8,7 +8,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import type { ChartPoint } from "./statsMath";
+import type { StatsChartPoint as ChartPoint } from "../api/types";
 import "./stats.css";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {

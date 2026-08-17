@@ -1,4 +1,4 @@
-import type { TournamentEntry } from "./statsMath";
+import type { StatsEntry as TournamentEntry } from "../api/types";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   year: "numeric",

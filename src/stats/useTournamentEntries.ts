@@ -1,45 +1,56 @@
-import { useEffect, useState } from "react";
-import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../auth/AuthContext";
-import type { TournamentEntry } from "./statsMath";
+import { errorMessage } from "../api/client";
+import { getMyStats } from "../api/stats";
+import type { StatsResponse } from "../api/types";
 
-export function useTournamentEntries() {
+const EMPTY: StatsResponse = {
+  overview: {
+    played: 0,
+    totalBuyin: 0,
+    totalRebuy: 0,
+    totalCost: 0,
+    totalWin: 0,
+    profitLoss: 0,
+    winRate: 0,
+    roi: 0,
+    winRateChange: null,
+    earningsChange: null,
+    roiChange: null,
+  },
+  entries: [],
+  chart: [],
+};
+
+/**
+ * Loads statistics from the API, which owns the arithmetic. The web client no
+ * longer computes win rate, ROI or the profit series itself, so it cannot
+ * drift away from what the mobile app reports.
+ *
+ * There is no live listener here: a user's own history only changes in
+ * response to their own actions, so refetching after a write is enough.
+ */
+export function useTournamentStats() {
   const { user } = useAuth();
-  const [entries, setEntries] = useState<TournamentEntry[]>([]);
+  const [stats, setStats] = useState<StatsResponse>(EMPTY);
   const [ready, setReady] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const reload = useCallback(async () => {
     if (!user) return;
-    return onSnapshot(doc(db, "users", user.uid), (snap) => {
-      const raw = (snap.data()?.tournaments as TournamentEntry[] | undefined) ?? [];
-      setEntries(raw);
+    try {
+      setStats(await getMyStats());
+      setError(null);
+    } catch (e) {
+      setError(errorMessage(e));
+    } finally {
       setReady(true);
-    });
+    }
   }, [user]);
 
-  return { entries, ready };
-}
+  useEffect(() => {
+    void reload();
+  }, [reload]);
 
-export async function addTournamentEntry(
-  uid: string,
-  entry: Omit<TournamentEntry, "id">,
-) {
-  const ref = doc(db, "users", uid);
-  const withId: TournamentEntry = {
-    ...entry,
-    id: `${Date.now()}${Math.random().toString(16).slice(2)}`,
-  };
-  const snap = await getDoc(ref);
-  const current = (snap.data()?.tournaments as TournamentEntry[] | undefined) ?? [];
-  await updateDoc(ref, { tournaments: [...current, withId] });
-}
-
-export async function deleteTournamentEntry(uid: string, entryId: string) {
-  const ref = doc(db, "users", uid);
-  const snap = await getDoc(ref);
-  const current = (snap.data()?.tournaments as TournamentEntry[] | undefined) ?? [];
-  await updateDoc(ref, {
-    tournaments: current.filter((e) => e.id !== entryId),
-  });
+  return { stats, ready, error, reload };
 }
