@@ -3,6 +3,7 @@ import { AuthProvider } from "./auth/AuthContext";
 import { LoginPage } from "./auth/LoginPage";
 import { SignUpPage } from "./auth/SignUpPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { LegacyClockRedirect } from "./components/LegacyClockRedirect";
 import { HomePage } from "./pages/HomePage";
 import { ClocksListPage } from "./pages/ClocksListPage";
 import { ClockPage } from "./clock/ClockPage";
@@ -19,12 +20,19 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
+          {/*
+            The root doubles as the landing point for legacy `/?t=<id>` clock
+            links. The redirect is outside ProtectedRoute so an unauthenticated
+            display keeps the tournament id instead of losing it to /login.
+          */}
           <Route
             path="/"
             element={
-              <ProtectedRoute>
-                <HomePage />
-              </ProtectedRoute>
+              <LegacyClockRedirect>
+                <ProtectedRoute>
+                  <HomePage />
+                </ProtectedRoute>
+              </LegacyClockRedirect>
             }
           />
           {/* "/new" is declared before "/:id" so it is not read as an id. */}

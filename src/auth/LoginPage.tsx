@@ -1,11 +1,21 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import "./auth.css";
+
+interface RedirectState {
+  from?: { pathname: string; search?: string };
+}
 
 export function LoginPage() {
   const auth = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Where ProtectedRoute sent us from, if anywhere — e.g. a /clock?t=<id> link
+  // opened before signing in.
+  const from = (location.state as RedirectState | null)?.from;
+  const destination = from ? `${from.pathname}${from.search ?? ""}` : "/";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
@@ -14,8 +24,8 @@ export function LoginPage() {
   // Leave the login page as soon as we're authenticated — covers email,
   // Google, and landing here while already signed in.
   useEffect(() => {
-    if (auth.user) navigate("/", { replace: true });
-  }, [auth.user, navigate]);
+    if (auth.user) navigate(destination, { replace: true });
+  }, [auth.user, navigate, destination]);
 
   useEffect(() => {
     auth.clearError();

@@ -1,8 +1,10 @@
 {
   "hosting": {
+    "//": "Deploying here replaces the standalone clock page that used to live at this site. That is safe: the mobile app now shares the canonical /clock?t=<id> link, and the React app redirects the older /?t=<id> form to it before any authentication check, so links already handed out keep working.",
     "site": "pokerpal-a1451",
     "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "//rewrites": "SPA fallback: every path serves index.html so /, /clock, /tournaments/:id and /tournaments/:id/edit all work when opened directly or refreshed, not just when navigated to in-app.",
     "rewrites": [{ "source": "**", "destination": "/index.html" }],
     "headers": [
       {
