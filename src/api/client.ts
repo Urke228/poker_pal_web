@@ -1,6 +1,17 @@
 import { auth } from "../firebase";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
+const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? "").trim();
+
+if (!API_BASE) {
+  // Without this the calls resolve relative to the dev server and come back as
+  // puzzling 404s from Vite rather than from the API. Note that a .env file
+  // saved with a UTF-8 BOM will do this too: the BOM becomes part of the first
+  // key's name, so VITE_API_BASE_URL reads as undefined.
+  throw new Error(
+    "VITE_API_BASE_URL is not set. Copy .env.example to .env.local, point it " +
+      "at the emulator or the deployed API, and restart the dev server.",
+  );
+}
 
 /**
  * A failed API call. `code` is the stable identifier the backend sends in
