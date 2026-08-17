@@ -7,6 +7,9 @@ import { HomePage } from "./pages/HomePage";
 import { ClocksListPage } from "./pages/ClocksListPage";
 import { ClockPage } from "./clock/ClockPage";
 import { StatsPage } from "./pages/StatsPage";
+import { TournamentsListPage } from "./pages/TournamentsListPage";
+import { TournamentDetailPage } from "./pages/TournamentDetailPage";
+import { TournamentFormPage } from "./pages/TournamentFormPage";
 import "./theme.css";
 
 function App() {
@@ -21,6 +24,39 @@ function App() {
             element={
               <ProtectedRoute>
                 <HomePage />
+              </ProtectedRoute>
+            }
+          />
+          {/* "/new" is declared before "/:id" so it is not read as an id. */}
+          <Route
+            path="/tournaments"
+            element={
+              <ProtectedRoute>
+                <TournamentsListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tournaments/new"
+            element={
+              <ProtectedRoute>
+                <TournamentFormPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tournaments/:id"
+            element={
+              <ProtectedRoute>
+                <TournamentDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tournaments/:id/edit"
+            element={
+              <ProtectedRoute>
+                <TournamentFormPage />
               </ProtectedRoute>
             }
           />

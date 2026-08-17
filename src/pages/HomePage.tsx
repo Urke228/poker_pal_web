@@ -11,6 +11,12 @@ interface Tile {
 
 const TILES: Tile[] = [
   {
+    to: "/tournaments",
+    icon: "🃏",
+    label: "Tournaments",
+    sublabel: "Create, edit and join tournaments",
+  },
+  {
     to: "/clocks",
     icon: "⏱",
     label: "Tournament Clock",
