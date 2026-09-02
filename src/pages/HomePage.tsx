@@ -23,16 +23,6 @@ const TILES: Tile[] = [
     sublabel: "Run or view a live blinds clock",
   },
   {
-    icon: "🪑",
-    label: "Seating",
-    sublabel: "Coming soon",
-  },
-  {
-    icon: "👥",
-    label: "Players",
-    sublabel: "Coming soon",
-  },
-  {
     to: "/stats",
     icon: "📊",
     label: "Stats",

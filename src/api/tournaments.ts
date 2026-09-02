@@ -1,7 +1,12 @@
 import { del, get, post, put } from "./client";
 import type { Player, Tournament, TournamentDetail, TournamentInput } from "./types";
 
-export type TournamentFilter = "mine" | "registered" | "public" | "all";
+export type TournamentFilter =
+  | "mine"
+  | "registered"
+  | "public"
+  | "all"
+  | "archived";
 
 export async function listTournaments(filter: TournamentFilter): Promise<Tournament[]> {
   const res = await get<{ tournaments: Tournament[] }>(`/tournaments?filter=${filter}`);

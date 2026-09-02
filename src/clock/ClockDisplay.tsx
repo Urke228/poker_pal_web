@@ -16,9 +16,26 @@ import "./clock.css";
 
 const nf = new Intl.NumberFormat("en-US");
 
-export function ClockDisplay({ doc }: { doc: ClockDoc }) {
+export function ClockDisplay({
+  doc,
+  onBack,
+  chrome = true,
+  theme: themeOverride,
+}: {
+  doc: ClockDoc;
+  /** When provided, the corner back control calls this instead of linking to
+   * /clocks — used by the tournament display to leave fullscreen in place. */
+  onBack?: () => void;
+  /** Set false to hide the corner buttons (back/fullscreen/theme) when the
+   * board is embedded in the tournament display, which owns those controls. */
+  chrome?: boolean;
+  /** When provided, use this palette (from the display) instead of the clock's
+   * own so the board matches the rest of the display. */
+  theme?: string;
+}) {
   const now = useNow();
-  const { theme, cycleTheme } = useClockTheme();
+  const { theme: internalTheme, cycleTheme } = useClockTheme();
+  const theme = themeOverride ?? internalTheme;
   const innerRef = useRef<HTMLDivElement>(null);
 
   const levels = doc.levels ?? [];
@@ -67,23 +84,37 @@ export function ClockDisplay({ doc }: { doc: ClockDoc }) {
 
   return (
     <div className="clock-page" data-theme={theme}>
-      <Link to="/clocks" className="clock-corner-btn clock-back-btn" title="Back">
-        ←
-      </Link>
-      <button
-        className="clock-corner-btn clock-fs-btn"
-        title="Fullscreen (F)"
-        onClick={toggleFullscreen}
-      >
-        ⛶
-      </button>
-      <button
-        className="clock-corner-btn clock-theme-btn"
-        title="Change colors (T)"
-        onClick={cycleTheme}
-      >
-        🎨
-      </button>
+      {chrome && (
+        <>
+          {onBack ? (
+            <button
+              className="clock-corner-btn clock-back-btn"
+              title="Exit fullscreen"
+              onClick={onBack}
+            >
+              ←
+            </button>
+          ) : (
+            <Link to="/clocks" className="clock-corner-btn clock-back-btn" title="Back">
+              ←
+            </Link>
+          )}
+          <button
+            className="clock-corner-btn clock-fs-btn"
+            title="Fullscreen (F)"
+            onClick={toggleFullscreen}
+          >
+            ⛶
+          </button>
+          <button
+            className="clock-corner-btn clock-theme-btn"
+            title="Change colors (T)"
+            onClick={cycleTheme}
+          >
+            🎨
+          </button>
+        </>
+      )}
 
       <div className="clock-board">
         <div className="clock-board-inner" ref={innerRef}>

@@ -5,13 +5,14 @@ import { TopBar } from "../components/TopBar";
 import { errorMessage } from "../api/client";
 import { listTournaments, type TournamentFilter } from "../api/tournaments";
 import type { Tournament } from "../api/types";
-import { formatDate, formatMoney } from "../format";
+import { formatBuyIn, formatDate } from "../format";
 import "./TournamentsListPage.css";
 
 const TABS: { key: TournamentFilter; label: string; empty: string }[] = [
   { key: "mine", label: "Organizing", empty: "You are not organizing any tournaments yet." },
   { key: "registered", label: "Registered", empty: "You have not joined any tournaments yet." },
   { key: "public", label: "Available", empty: "There are no public tournaments to join right now." },
+  { key: "archived", label: "Archive", empty: "No finished tournaments yet." },
 ];
 
 export function TournamentsListPage() {
@@ -82,7 +83,7 @@ export function TournamentsListPage() {
           <ul className="tournaments-list">
             {tournaments.map((t) => (
               <li key={t.id}>
-                <Link to={`/tournaments/${t.id}`}>
+                <Link to={`/tournaments/${t.id}`} className="tournaments-item">
                   <span className="tournaments-name">
                     {t.name}
                     {t.status === "finished" && (
@@ -91,10 +92,16 @@ export function TournamentsListPage() {
                     {!t.isPublic && <span className="tournaments-badge is-quiet">Private</span>}
                   </span>
                   <span className="tournaments-meta">
-                    {formatDate(t.dateTime)} · {formatMoney(t.buyIn)} buy-in ·{" "}
-                    {t.participants.length}
+                    {formatDate(t.dateTime)} · {formatBuyIn(t.buyIn)} buy-in ·{" "}
+                    {t.participants.length + (t.guestCount ?? 0)}
                     {t.playerLimit > 0 ? `/${t.playerLimit}` : ""} players
                   </span>
+                </Link>
+                <Link
+                  to={`/tournaments/${t.id}/display`}
+                  className="tournaments-open-display"
+                >
+                  Open display →
                 </Link>
               </li>
             ))}

@@ -57,6 +57,8 @@ export interface Tournament {
   status: TournamentStatus;
   results?: TournamentResult[];
   finalizedAt?: string | null;
+  /** Guest players (roster rows without an account); only sent by the list. */
+  guestCount?: number;
 }
 
 export interface TournamentDetail extends Tournament {
@@ -73,6 +75,16 @@ export interface Player {
   buyInPaid: boolean;
   rebuys: number;
   addOns: number;
+}
+
+/**
+ * A published seating chart. `tables[t][s]` is the seated player's display name
+ * or null for an empty seat (table `t + 1`, seat `s + 1`). Published from the
+ * organizer app; the web display is read-only.
+ */
+export interface Seating {
+  tables: (string | null)[][];
+  publishedAt: string | null;
 }
 
 /** The body accepted by POST and PUT /tournaments. */

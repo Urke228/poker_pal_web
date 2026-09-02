@@ -20,12 +20,44 @@
   height: 32px;
 }
 
+.top-bar-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: auto;
+  margin-left: 24px;
+  flex-wrap: wrap;
+}
+
+.top-bar-nav a {
+  color: #0b1a15;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+.top-bar-nav a:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.top-bar-nav a.is-active {
+  background: rgba(0, 0, 0, 0.14);
+}
+
 .top-bar-user {
   display: flex;
   align-items: center;
   gap: 12px;
   font-size: 14px;
   color: #0b1a15;
+}
+
+@media (max-width: 560px) {
+  .top-bar-email {
+    display: none;
+  }
 }
 
 .top-bar-user button {

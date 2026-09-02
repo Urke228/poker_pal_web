@@ -14,5 +14,13 @@ export function formatDate(iso: string | null): string {
 }
 
 export function formatMoney(value: number): string {
-  return value === 0 ? "Free" : `$${value.toFixed(2)}`;
+  return `$${value.toFixed(2)}`;
+}
+
+/**
+ * Buy-ins are the one money value where zero has a name. Winnings and payouts
+ * must never say "Free" — a non-winner simply shows no amount.
+ */
+export function formatBuyIn(value: number): string {
+  return value === 0 ? "Free" : formatMoney(value);
 }

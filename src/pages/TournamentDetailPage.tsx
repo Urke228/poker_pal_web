@@ -10,7 +10,7 @@ import {
   leaveTournament,
 } from "../api/tournaments";
 import { PAYOUT_LABELS, type Player, type TournamentDetail } from "../api/types";
-import { formatDate, formatMoney } from "../format";
+import { formatBuyIn, formatDate, formatMoney } from "../format";
 import "./TournamentDetailPage.css";
 
 export function TournamentDetailPage() {
@@ -124,7 +124,7 @@ export function TournamentDetailPage() {
         <section className="detail-facts">
           <div>
             <span>Buy-in</span>
-            <strong>{formatMoney(tournament.buyIn)}</strong>
+            <strong>{formatBuyIn(tournament.buyIn)}</strong>
           </div>
           <div>
             <span>Players</span>
@@ -162,6 +162,12 @@ export function TournamentDetailPage() {
         </section>
 
         <div className="detail-actions">
+          <Link
+            className="detail-btn is-primary"
+            to={`/tournaments/${tournament.id}/display`}
+          >
+            Open display
+          </Link>
           {isOrganizer ? (
             <>
               <Link className="detail-btn" to={`/tournaments/${tournament.id}/edit`}>
@@ -218,7 +224,9 @@ export function TournamentDetailPage() {
                 <li key={`${r.place}-${r.name}`}>
                   <span className="detail-place">{r.place}</span>
                   <span className="detail-result-name">{r.name}</span>
-                  <span className="detail-winnings">{formatMoney(r.winnings)}</span>
+                  <span className="detail-winnings">
+                    {r.winnings > 0 ? formatMoney(r.winnings) : ""}
+                  </span>
                 </li>
               ))}
             </ol>

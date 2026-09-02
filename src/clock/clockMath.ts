@@ -1,3 +1,5 @@
+import { payoutFractions } from "../tournament/payouts";
+
 export interface BlindLevel {
   smallBlind: number;
   bigBlind: number;
@@ -76,21 +78,7 @@ export function levelsUntilBreak(levels: BlindLevel[], idx: number): number | nu
   return null;
 }
 
+// Single source of truth, shared with the tournament display's Entries & Payouts.
 export function payoutPercents(doc: ClockDoc): number[] {
-  switch (doc.payoutStructure) {
-    case "winner-takes-all":
-      return [1.0];
-    case "top-heavy":
-      return [0.7, 0.2, 0.1];
-    case "flat":
-      return [0.4, 0.3, 0.2, 0.1];
-    case "manual":
-      if (doc.manualPayouts && doc.manualPayouts.length) {
-        return doc.manualPayouts.map((p) => p / 100);
-      }
-      return [1.0];
-    case "standard":
-    default:
-      return [0.5, 0.3, 0.2];
-  }
+  return payoutFractions(doc.payoutStructure, doc.manualPayouts);
 }

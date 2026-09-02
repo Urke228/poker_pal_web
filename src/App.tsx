@@ -11,6 +11,8 @@ import { StatsPage } from "./pages/StatsPage";
 import { TournamentsListPage } from "./pages/TournamentsListPage";
 import { TournamentDetailPage } from "./pages/TournamentDetailPage";
 import { TournamentFormPage } from "./pages/TournamentFormPage";
+import { TournamentDisplayPage } from "./pages/TournamentDisplayPage";
+import { ProfilePage } from "./pages/ProfilePage";
 import "./theme.css";
 
 function App() {
@@ -69,6 +71,14 @@ function App() {
             }
           />
           <Route
+            path="/tournaments/:id/display"
+            element={
+              <ProtectedRoute>
+                <TournamentDisplayPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/clocks"
             element={
               <ProtectedRoute>
@@ -89,6 +99,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <StatsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
               </ProtectedRoute>
             }
           />

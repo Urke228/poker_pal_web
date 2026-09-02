@@ -91,18 +91,41 @@
 .tournaments-list li {
   border: 1px solid var(--pp-border);
   border-radius: 8px;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
 }
 
 .tournaments-list a {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 14px 16px;
   color: inherit;
   text-decoration: none;
 }
 
-.tournaments-list a:hover {
+.tournaments-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+.tournaments-item:hover {
+  background: var(--pp-input-fill);
+}
+
+.tournaments-open-display {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-left: 1px solid var(--pp-border);
+  color: var(--pp-primary);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tournaments-open-display:hover {
   background: var(--pp-input-fill);
 }
 
